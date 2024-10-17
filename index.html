@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    text-decoration: none;
+    list-style: none;
+}
+
+a {
+    color: rgb(31, 31, 31);
+}
+
+body {
+    background: #ffffff;
+    height: 100vh;
+}
+
+header {
+    background-color: #ffffff;;
+    color: rgb(253, 253, 253);
+    padding: 20px 90px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 1px 2rem rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 0;
+    z-index: 1000;
+    right: 0;
+}
+
+.burger {
+    display: none;
+    cursor: pointer;
+}
+
+.burger div {
+    margin-top: 5px;
+    border-radius: 8px;
+    width: 20px;
+    height: 2px;
+    background-color: #020814;
+    transition: all .3s ease-in-out;
+}
+
+nav {
+    display: flex;  
+    gap: 55px;
+    padding: 0 10px;
+    position: relative;
+    text-align: center;
+    align-items: center;
+    
+}
+
+nav a::before {
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    content: '';
+    width: 0;
+    height: 2px;
+    background-color: #f0f8ff;
+    transition: width 0.3s ease-in-out;
+}
+
+nav a:hover::before {
+    width: 100%;
+}
+
+nav a {
+    color: rgb(19, 19, 19);
+    text-decoration: none;
+    font-size: 15px;
+    position: relative;
+}
+
+
+
+
+section#current{
+    color: #f0f8ff;
+}
+
+
+
+
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+   
+    
+   
+    header{
+        padding: 20px 20px;
+        position: relative;
+    }
+    nav {
+        flex-direction: column;
+        display: none;
+        position: absolute;
+        right: 0;
+        top:57px;
+        height: 100vh;
+        background-color: #020814;
+        transition: all .3s ease;
+        width: 50%;
+        justify-content: center;
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+    nav a {
+        margin: 10px 0;
+        color: #f0f8ff;
+    }
+
+    .burger {
+        display: block;
+    }
+}
+
+section {
+    padding: 40px;
+}
+
+footer {
+    background-color: #ffffff;
+    color: #020814;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    margin-top: 3rem;
+    width: 100%;
+    box-shadow:  0px 1px 3rem rgba(0, 0, 0, 0.178);
+    bottom: 0;
+}
+
+.logo {
+    flex-direction: column;
+    display: flex;
+}
+
+.logo img {
+    width: 150px;
+}
+
+section.home {
+    background-size: cover;
+    height: 90vh;
+    background-position: center;
+    background-image:linear-gradient(rgba(0, 0, 0, 0.137),rgba(0, 0, 0, 0.336)), url("./images/rainy.jpg");
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+footer a:hover{
+    color: rgb(46, 35, 197);
+    text-decoration: underline;
+    transition: all .3s ease-in-out;
+}
+
+
+
+section.home button {
+    padding: 1rem;
+    outline: none;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    background-color: #032f96;
+}
+
+section.home h2 {
+    font-size: 3rem;
+}
+
+section.home input {
+    backdrop-filter: blur(8px);
+    background-color: #fcfcfc11;
+    outline: none;
+    border: 1px solid white;
+    color: white;
+    padding: 1rem;
+    width: 400px;
+    border-radius: 30px;
+}
+
+.weather-box {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    margin: 20px auto;
+    text-align: center;
+    color: white;
+}
+
+.weather-box h3 {
+    font-size: 2rem;
+}
+
+.weather-box img {
+    margin: 10px 0;
+}
+
+.weather-box p {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+.search-box {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.search-box input {
+    padding: 10px;
+    width: 200px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+}
+
+.search-box button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 30px;
+    background-color: #4682b4;
+    color: white;
+    cursor: pointer;
+}
+
+/* Ensure section #current does not overlap and has specific height */
+section#current {
+    height: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: background-image 0.5s ease-in-out;
+    min-height: 100vh;
+    margin-bottom: 2rem;
+    background-size: cover;
+    background-position: center;
+    background-image: linear-gradient(rgba(15, 8, 77, 0.336),rgba(29, 3, 59, 0.432));
+    
+}
+
+/* Additional info styles */
+.weather-info {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.weather-info .info-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.info-box img {
+    width: 40px;
+    height: 40px;
+}
+
+a#toggle-temp{
+    background-color: #032f96;
+    padding: 0.9rem;
+}
+
+.logo span{
+    color: rgb(46, 10, 179);
+}
+
+
+/* Ensure better spacing and sizing for small screens */
+@media (max-width: 768px) {
+header {
+padding: 15px 10px;
+position: relative;
+}
+
+nav {
+flex-direction: column;
+display: none;
+position: absolute;
+right: 0;
+top:57px;
+height: 100vh;
+background-color: #020814;
+width: 100%;
+}
+
+nav a {
+margin: 20px 0;
+font-size: 18px;
+}
+
+section.home {
+
+height: 50%;
+background-size: cover;
+background-position: center;
+}
+
+section.home h2 {
+font-size: 2.5rem;
+font-weight: 700;
+}
+
+section.home input {
+width: 250px;
+margin-bottom: 1rem;
+}
+
+.search-box {
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+section#current {
+padding: 20px 10px;
+
+background-size: cover;
+}
+
+.weather-box {
+width: 100%;
+padding: 15px;
+margin: 10px 0;
+background: rgba(255, 255, 255, 0.3);
+}
+
+.weather-info {
+flex-direction: column;
+align-items: center;
+}
+
+.info-box {
+margin-bottom: 20px;
+}
+
+.info-box img {
+width: 30px;
+height: 30px;
+}
+
+footer {
+padding: 15px;
+font-size: 14px;
+}
+
+
+
+/* Fixing icon visibility */
+.info-box img {
+width: 40px;
+height: 40px;
+display: block;
+margin: 0 auto;
+}
+
+/* Input box and button spacing */
+.search-box input, .search-box button {
+padding: 10px;
+width: 100%;
+max-width: 300px;
+margin: 10px auto;
+display: block;
+}
+
+.search-box button {
+background-color: #032f96;
+color: white;
+cursor: pointer;
+border: none;
+}
+
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="container">
+   <header data-aos="fade-down">
+    <div class="logo"><a href="#"><h2>sophi<span>weather</span></h2></a></div>
+    <div class="burger" id="burger">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <nav id="nav">
+        <a href="#home">Home</a>
+        <div class="to-five-day"><a href="forecast.html" id="fiveDayForecastLink">View Five-Day Forecast</a></div>
+        <a href="#" id="toggle-temp">Convert to °F</a>
+    </nav>
+   </header>
+
+   <section id="home" class="home" data-aos="fade-up">
+    <h2>Welcome to the Weather App</h2>
+    <p>Stay updated with the latest weather conditions!</p>
+    <div class="search-box">
+        <input type="text" id="city" placeholder="Enter city name">
+        <button id="search">Search</button>
+    </div>
+</section>
+
+<section id="current" data-aos="fade-up">
+    <div class="weather-box" id="weather" data-aos="zoom-in">
+        <h3 data-aos="fade-right">Current Weather Info</h3>
+        <p data-aos="fade-left">Search for a city to get current weather updates or enable location for automatic updates.</p>
+    </div>
+
+    <div class="weather-info" id="additional-info">
+        <div class="info-box" data-aos="fade-up" data-aos-delay="200">
+            <i class="fas fa-wind"></i>
+            <p id="wind-speed">Wind Speed: -- m/s</p>
+        </div>
+        <div class="info-box" data-aos="fade-up" data-aos-delay="400">
+            <i class="fas fa-tint"></i>
+            <p id="humidity">Humidity: -- %</p>
+        </div>
+        <div class="info-box" data-aos="fade-up" data-aos-delay="600">
+            <i class="fas fa-sun"></i>
+            <p id="sunrise">Sunrise: --:--</p>
+        </div>
+        <div class="info-box" data-aos="fade-up" data-aos-delay="800">
+            <i class="fas fa-moon"></i>
+            <p id="sunset">Sunset: --:--</p>
+        </div>
+        
+    </div>
+</section>
+
+<footer data-aos="fade-up">
+    <ul>
+        <li><a href="http://www.icuzambia.net">ICU Zambia</a></li>
+        <li><a href="http://www.zrdc.org">ZRDC</a></li>
+    </ul>
+    <p>&copy; 2024 Weather App. All rights reserved. Designed and maintained by...</p>
+</footer>
+
+</div>
+
+<script src="https://kit.fontawesome.com/aed6434f35.js" crossorigin="anonymous"></script>
+<script>
+// Initialize AOS
+AOS.init({
+    duration: 1000,  // Animation duration
+    once: true,  // Animation should happen only once - while scrolling down
+    mirror: false  // Whether elements should animate out while scrolling past them
+});
+
+const apiKey = '524e7639f7db962d50b175dc66132873'; // OpenWeatherMap API key
+let isCelsius = true; // Temperature unit state
+
+function fetchWeatherByCoords(lat, lon) {
+    const apiURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+    fetch(apiURL)
+        .then(response => response.json())
+        .then(data => {
+            updateWeatherDisplay(data);
+        })
+        .catch(error => {
+            alert('Unable to retrieve weather data.');
+        });
+}
+
+function fetchWeather(city = 'London') {
+    const apiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    fetch(apiURL)
+        .then(response => response.json())
+        .then(data => {
+            updateWeatherDisplay(data);
+        })
+        .catch(error => {
+            alert('City not found. Please try again.');
+        });
+}
+
+function updateWeatherDisplay(data) {
+    const { main, weather, wind, sys, name, dt } = data;
+    const temp = isCelsius ? main.temp : (main.temp * 9/5) + 32;
+    const currentTime = new Date(dt * 1000).toLocaleTimeString(); // Convert UNIX timestamp to time
+
+    document.getElementById('weather').innerHTML = `
+        <h3>${name}</h3>
+        <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="${weather[0].description}">
+        <p>Temperature: ${Math.round(temp)}°${isCelsius ? 'C' : 'F'}</p>
+        <p id="current-time">Time: ${currentTime}</p>
+    `;
+
+    // Update additional info
+    document.getElementById('wind-speed').innerText = `Wind Speed: ${wind.speed} m/s`;
+    document.getElementById('humidity').innerText = `Humidity: ${main.humidity} %`;
+    document.getElementById('sunrise').innerText = `Sunrise: ${new Date(sys.sunrise * 1000).toLocaleTimeString()}`;
+    document.getElementById('sunset').innerText = `Sunset: ${new Date(sys.sunset * 1000).toLocaleTimeString()}`;
+
+    // Change background based on weather
+    changeBackground(weather[0].main);
+}
+
+function changeBackground(weatherCondition) {
+    const currentSection = document.getElementById('current');
+    let backgroundImage = '';
+
+    switch (weatherCondition) {
+        case 'Clear':
+            backgroundImage = 'url("./images/clearSky.jpg")';
+            break;
+        case 'Clouds':
+            backgroundImage = 'url("./images/clouds.jpg")';
+            break;
+        case 'Rain':
+            backgroundImage = 'url("./images/rainy.jpg")';
+            break;
+        case 'Snow':
+            backgroundImage = 'url("./images/snowy.jpg")';
+            break;
+        case 'Drizzle':
+            backgroundImage = 'url("./images/drizzle.jpg")';
+            break;
+        case 'Thunderstorm':
+            backgroundImage = 'url("./images/thunders.jpg")';
+            break;
+        default:
+            backgroundImage = 'url("./images/default.jpg")';
+            break;
+    }
+    currentSection.style.backgroundImage = backgroundImage;
+}
+
+document.getElementById('search').addEventListener('click', () => {
+    const city = document.getElementById('city').value;
+    fetchWeather(city);
+});
+
+document.getElementById('toggle-temp').addEventListener('click', () => {
+    isCelsius = !isCelsius;
+    document.getElementById('toggle-temp').innerText = `Convert to °${isCelsius ? 'F' : 'C'}`;
+    const tempElement = document.querySelector('.weather-box p');
+    const tempText = tempElement.innerText;
+    const tempValue = parseFloat(tempText.match(/-?\d+(\.\d+)?/)[0]);
+    const newTemp = isCelsius ? (tempValue - 32) * 5/9 : (tempValue * 9/5) + 32;
+    tempElement.innerText = `Temperature: ${Math.round(newTemp)}°${isCelsius ? 'C' : 'F'}`;
+});
+
+// Handle burger menu
+const burger = document.getElementById('burger');
+const nav = document.getElementById('nav');
+
+burger.addEventListener('click', () => {
+    nav.classList.toggle('active');
+});
+
+// Get user's location
+navigator.geolocation.getCurrentPosition(position => {
+    fetchWeatherByCoords(position.coords.latitude, position.coords.longitude);
+}, () => {
+    fetchWeather(); // Fallback to default city
+});
+
+document.getElementById('fiveDayForecastLink').addEventListener('click', () => {
+    const city = document.getElementById('city').value || 'London';  // Use 'London' if no city entered
+    window.location.href = `forecast.html?city=${city}`;
+});
+
+
+
+</script>
+
+</body>
+</html>
